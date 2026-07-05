@@ -662,6 +662,15 @@
     renderSightings(filtered);
   }
 
+  function normalizePower(raw) {
+    if (!raw) return null;
+    const cleaned = raw.trim();
+    const found = POWERS.find(p =>
+      cleaned.toLowerCase().startsWith(p.name.toLowerCase())
+    );
+    return found ? found.name : cleaned;
+  }
+
   function tallyVotes(gvizData) {
     const rows = gvizData.table.rows || [];
     const tally = {};
@@ -673,7 +682,7 @@
       const cells = row.c || [];
       const timestamp = cells[0] && cells[0].f ? cells[0].f : (cells[0] && cells[0].v ? cells[0].v : "");
       const guide = cells[1] && cells[1].v ? String(cells[1].v).trim() : null;
-      const power = cells[2] && cells[2].v ? String(cells[2].v).trim() : null;
+      const power = cells[2] && cells[2].v ? normalizePower(String(cells[2].v)) : null;
       const observation = cells[3] && cells[3].v ? String(cells[3].v).trim() : "";
       if (!guide || !power) return;
 
